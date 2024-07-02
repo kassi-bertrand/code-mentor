@@ -98,7 +98,7 @@ Use the format category(scope or module): message. The categories and their purp
 
 - `feat` or `feature`: Introducing new features or code.
 
--`fix`: Fixing bugs (referencing an issue if applicable).
+- `fix`: Fixing bugs (referencing an issue if applicable).
 
 - `refactor`: Refactoring code that isn’t a feature or a fix.
 
