@@ -77,8 +77,11 @@ git checkout -b feature/short-description
 Examples of Branch Names:
 
 - `feature/add-login-page`
+
 - `fix/issue-42-user-auth`
+
 - `docs/update-readme`
+
 - `refactor/code-cleanup`
 
 2. Make your changes
@@ -93,11 +96,15 @@ Before committing, ensure your commit message follows the [Conventional Commits 
 
 Use the format category(scope or module): message. The categories and their purposes are:
 
-`feat` or `feature`: Introducing new features or code.
-`fix`: Fixing bugs (referencing an issue if applicable).
-`refactor`: Refactoring code that isn’t a feature or a fix.
-`docs`: Changes to documentation files.
-`chore`: Other changes that don't fit the above categories.
+- `feat` or `feature`: Introducing new features or code.
+
+-`fix`: Fixing bugs (referencing an issue if applicable).
+
+- `refactor`: Refactoring code that isn’t a feature or a fix.
+
+- `docs`: Changes to documentation files.
+
+- `chore`: Other changes that don't fit the above categories.
 
 Example:
 
