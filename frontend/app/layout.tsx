@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "CodeMentor",
-  description: "AI-powered interactive coding playground for learning, practice, and assessment. Enhance your coding skills with personalized exercises and real-time feedback.",
+  description: "AI-powered interactive coding playground for learning.",
 };
 
 export default function RootLayout({
@@ -16,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
