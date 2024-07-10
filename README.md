@@ -34,12 +34,31 @@ git clone https://github.com/kassi-bertrand/code-mentor.git
 
 ### Frontend
 
+#### Install the necessary dependencies
+
 To run the frontend, enter the `frontend` folder, then install the packages with:
 
 ```sh
 cd frontend
 npm install
 ```
+
+#### Setup User authentication using `Clerk`
+
+Those steps are important to be able to test the Sign-In/Sign-Up functionalities.
+
+1. For this, head over to [Clerk](https://clerk.com), and create an account.
+
+2. Create a new application, give it the name you want 💁‍♂️🙃.
+
+3. Ensure that **only** `Email` and `username` are activated. You're selecting the option that will be made available to the user, when they try to authenticate on the website. On the side, you can immediately the form they'll be presented.
+
+4. Tap the `Create Application` button.
+
+5. You'll be given two API keys `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`. Copy their values into your `.env` file (Create one if not already). For reference, an example environment file `env.example` is provided in the `frontend` folder.
+
+#### Run the application on your computer
+
 Launch the development server:
 
 ```sh
@@ -92,9 +111,7 @@ Edit the files and make your changes. Follow any existing coding standards and g
 
 Before committing, ensure your commit message follows the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/)
 
-#### Commit Message Format
-
-Use the format category(scope or module): message. The categories and their purposes are:
+Use the format: **category(scope or module): message**. The categories and their purposes are:
 
 - `feat` or `feature`: Introducing new features or code.
 
@@ -105,6 +122,8 @@ Use the format category(scope or module): message. The categories and their purp
 - `docs`: Changes to documentation files.
 
 - `chore`: Other changes that don't fit the above categories.
+
+- If not listed, come up with a short but descriptive category name.
 
 Example:
 
@@ -149,7 +168,7 @@ Ensure your pull request includes:
 
 Once your pull request is submitted, team members will review your changes. Be sure to check for comments and suggestions, and make any necessary updates to your branch.
 
-#### Commands for updating the branch:
+**Note**: Commands for updating the branch:
 
 ```sh
 # Pull the latest changes from the main branch, first
