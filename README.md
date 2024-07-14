@@ -26,6 +26,13 @@ Code Mentor is an AI-Powered Interactive coding playground that integrates LLM c
 
 # How to run this project locally
 
+### Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+- You have installed Node.js (v18.17.0 or higher, or v20.5.0 or higher).
+- You have a Git client installed (v2.30.0 or higher).
+- You have npm installed (v10.8.1 or higher).
+
 1. Start by cloning the repsitory with:
 
 ```sh
