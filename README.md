@@ -94,7 +94,7 @@ The project has no backend, yet. Will populate this section once we start buildi
 
 # How to contribute Code to the repository?
 
-#### Ensure you're on the `main` branch
+## Ensure you're on the `main` branch
 
 Before proceeding, ensure that you're on the `main` branch with:
 
@@ -103,7 +103,7 @@ git checkout main
 ```
 This command will switch you to the `main` branch if you're not already on it. If you're already on the `main` branch, it will simply tell you that you're already there.
 
-#### Create a new branch based on what you're about to contribute
+## Create a new branch
 
 To create a new branch for your feature, bug fix, or documentation update. Use a descriptive name for your branch that indicates the purpose of the changes. In this example, we'll create a branch called `feature/short-description`.
 
@@ -121,11 +121,11 @@ Examples of Branch Names:
 
 - `refactor/code-cleanup`
 
-#### Make your changes
+## Make your changes
 
 Edit the files and make your changes to implement your feature, bug fix, or documentation update, etc. Follow any existing coding standards and guidelines for the project.
 
-#### Commit your changes
+## Commit your changes
 
 Before committing, ensure your commit message follows the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/)
 
@@ -155,7 +155,7 @@ git commit -m "feat(login): add user authentication"
 
 **Note**: If you're making changes in more than two files, you do not want all those changes to be in just one commit. Instead, spread your changes across multiple commits with meaningful commit messages so that it's easy to follow your steps to implement/fix/update something.
 
-#### Push Your Local Branch to GitHub
+## Push Your Local Branch to GitHub
 
 So, far all the work you've conducted happened on your local machine. So, all the changes you made are only visible to you and are not present on GitHub. In this step, you're pushing your branch with your changes to GitHub.
 
@@ -168,7 +168,7 @@ git push origin feature/short-description
 
 **NOTE: Make sure you can run the code with your changes, before submitting a pull request.**
 
-#### Create a Pull Request
+## Create a Pull Request
 
 After the previous step, you should see the branch you created on computer also appear our github. Now, you can create a new pull request from the branch you created (i.e. `feature/short-description`) into the `main` branch.
 
@@ -190,7 +190,7 @@ Ensure your pull request includes:
 
 - Mention Kassi as reviewer to your pull request.
 
-#### Respond to Feedback
+## Respond to Feedback
 
 Once your pull request is submitted, team members will review your changes, and provide feedback. Be sure to check for comments and suggestions, and make any necessary updates to your branch.
 
@@ -212,13 +212,13 @@ git commit -m "fix: resolve merge conflicts"
 git push origin feature/short-description
 ```
 
-#### Merge the Pull Request
+## Merge the Pull Request
 
 After your pull request is approved, it can be merged into the `main` branch. A team member with the necessary permissions will handle this.
 
 **Note**: Once the pull request is merged, the branch should be deleted to keep the repository clean.
 
-#### Clean Up Your Local Repository
+## Clean Up Your Local Repository
 
 After your changes are merged, you should delete the local branch to avoid clutter.
 
