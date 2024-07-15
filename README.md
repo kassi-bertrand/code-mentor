@@ -33,13 +33,13 @@ Before you begin, ensure you have met the following requirements:
 - You have a Git client installed (v2.30.0 or higher).
 - You have npm installed (v10.8.1 or higher).
 
-1. Start by cloning the repsitory with:
+### Start by cloning the repsitory with:
 
 ```sh
 git clone https://github.com/kassi-bertrand/code-mentor.git
 ```
 
-### Frontend
+### Frontend Setup
 
 #### Install the necessary dependencies
 
@@ -64,7 +64,7 @@ Those steps are important to be able to test the Sign-In/Sign-Up functionalities
 
 5. You'll be given two API keys `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`. Copy their values into your `.env` file (Create one if not already). For reference, an example environment file `env.example` is provided in the `frontend` folder.
 
-#### Run the application on your computer
+#### Run the frontend application on your computer
 
 Launch the development server:
 
@@ -92,9 +92,20 @@ The project has no backend, yet. Will populate this section once we start buildi
 | ------------------ | -------------------------------------------------------------------------- |
 | `frontend`         | The Next.js application for the frontend.                                  |
 
-# How to contribute?
+# How to contribute Code to the repository?
 
-1. Create a new branch for your feature, bug fix, or documentation update. Use a descriptive name for your branch that indicates the purpose of the changes. In this example, we'll create a branch called `feature/short-description`.
+#### Ensure you're on the `main` branch
+
+Before proceeding, ensure that you're on the `main` branch with:
+
+```sh
+git checkout main
+```
+This command will switch you to the `main` branch if you're not already on it. If you're already on the `main` branch, it will simply tell you that you're already there.
+
+#### Create a new branch based on what you're about to contribute
+
+To create a new branch for your feature, bug fix, or documentation update. Use a descriptive name for your branch that indicates the purpose of the changes. In this example, we'll create a branch called `feature/short-description`.
 
 ```sh
 # Create a new branch
@@ -110,15 +121,15 @@ Examples of Branch Names:
 
 - `refactor/code-cleanup`
 
-2. Make your changes
+#### Make your changes
 
-Edit the files and make your changes. Follow any existing coding standards and guidelines for the project.
+Edit the files and make your changes to implement your feature, bug fix, or documentation update, etc. Follow any existing coding standards and guidelines for the project.
 
-3. Commit your changes
+#### Commit your changes
 
 Before committing, ensure your commit message follows the [Conventional Commits format](https://www.conventionalcommits.org/en/v1.0.0/)
 
-Use the format: **category(scope or module): message**. The categories and their purposes are:
+Ensure that your commit messages follow the format: **category(scope or module): message**. The categories and their purposes are:
 
 - `feat` or `feature`: Introducing new features or code.
 
@@ -132,28 +143,34 @@ Use the format: **category(scope or module): message**. The categories and their
 
 - If not listed, come up with a short but descriptive category name.
 
-Example:
+Here is an example to perform one commit on your branch:
 
 ```sh
 # Add changes to the staging area
-git add .
+git add <files-you-modified>
 
-# Commit with a meaningful message
+# Example commit with a meaningful message following following format.
 git commit -m "feat(login): add user authentication"
 ```
 
-5. Push Your Branch
+**Note**: If you're making changes in more than two files, you do not want all those changes to be in just one commit. Instead, spread your changes across multiple commits with meaningful commit messages so that it's easy to follow your steps to implement/fix/update something.
 
-Push your branch to the main repository on GitHub
+#### Push Your Local Branch to GitHub
+
+So, far all the work you've conducted happened on your local machine. So, all the changes you made are only visible to you and are not present on GitHub. In this step, you're pushing your branch with your changes to GitHub.
+
+Push your local branch to the repository on GitHub with:
 
 ```sh
 # Push your branch to the main repository
 git push origin feature/short-description
 ```
 
-6. Create a Pull Request
-
 **NOTE: Make sure you can run the code with your changes, before submitting a pull request.**
+
+#### Create a Pull Request
+
+After the previous step, you should see the branch you created on computer also appear our github. Now, you can create a new pull request from the branch you created (i.e. `feature/short-description`) into the `main` branch.
 
 - Go to the repository on GitHub.
 
@@ -171,11 +188,13 @@ Ensure your pull request includes:
 
 - Links to any relevant issues (if applicable).
 
-7. Respond to Feedback
+- Mention Kassi as reviewer to your pull request.
 
-Once your pull request is submitted, team members will review your changes. Be sure to check for comments and suggestions, and make any necessary updates to your branch.
+#### Respond to Feedback
 
-**Note**: Commands for updating the branch:
+Once your pull request is submitted, team members will review your changes, and provide feedback. Be sure to check for comments and suggestions, and make any necessary updates to your branch.
+
+Commands for updating the branch are:
 
 ```sh
 # Pull the latest changes from the main branch, first
@@ -193,13 +212,13 @@ git commit -m "fix: resolve merge conflicts"
 git push origin feature/short-description
 ```
 
-8. Merge the Pull Request
+#### Merge the Pull Request
 
-After your pull request is approved, it can be merged into the main branch. A team member with the necessary permissions will handle this.
+After your pull request is approved, it can be merged into the `main` branch. A team member with the necessary permissions will handle this.
 
-Note: Once the pull request is merged, the branch should be deleted to keep the repository clean.
+**Note**: Once the pull request is merged, the branch should be deleted to keep the repository clean.
 
-9. Clean Up Your Local Repository
+#### Clean Up Your Local Repository
 
 After your changes are merged, you should delete the local branch to avoid clutter.
 
