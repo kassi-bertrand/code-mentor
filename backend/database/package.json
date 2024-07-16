@@ -17,6 +17,7 @@
     "wrangler": "^3.60.3"
   },
   "dependencies": {
+    "drizzle-kit": "^0.23.0",
     "drizzle-orm": "^0.32.0"
   }
 }
