@@ -7,8 +7,8 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
-    "generate": "drizzle-kit generate:sqlite --schema=src/schema.ts",
-    "up": "drizzle-kit up:sqlite --schema=src/schema.ts",
+    "generate": "drizzle-kit generate",
+    "up": "drizzle-kit up",
     "cf-typegen": "wrangler types"
   },
   "devDependencies": {
