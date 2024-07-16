@@ -21,6 +21,7 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-kit": "^0.23.0",
-    "drizzle-orm": "^0.32.0"
+    "drizzle-orm": "^0.32.0",
+    "itty-router": "^5.0.17"
   }
 }
