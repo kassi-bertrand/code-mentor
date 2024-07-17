@@ -26,22 +26,22 @@ Code Mentor is an AI-Powered Interactive coding playground that integrates LLM c
 
 # How to run this project locally
 
-### Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
-- You have installed Node.js (v18.17.0 or higher, or v20.5.0 or higher).
+- You have installed Node.js (v18.17.0 or higher).
 - You have a Git client installed (v2.30.0 or higher).
 - You have npm installed (v10.8.1 or higher).
 
-### Start by cloning the repsitory with:
+## Start by cloning the repository with:
 
 ```sh
 git clone https://github.com/kassi-bertrand/code-mentor.git
 ```
 
-### Frontend Setup
+## Frontend Setup
 
-#### Install the necessary dependencies
+### Install the necessary dependencies
 
 To run the frontend, enter the `frontend` folder, then install the packages with:
 
@@ -50,7 +50,7 @@ cd frontend
 npm install
 ```
 
-#### Setup User authentication using `Clerk`
+### Setup User authentication using `Clerk`
 
 Those steps are important to be able to test the Sign-In/Sign-Up functionalities.
 
@@ -64,7 +64,84 @@ Those steps are important to be able to test the Sign-In/Sign-Up functionalities
 
 5. You'll be given two API keys `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`. Copy their values into your `.env` file (Create one if not already). For reference, an example environment file `env.example` is provided in the `frontend` folder.
 
-#### Run the frontend application on your computer
+## Backend Setup
+
+Our backend consists of [Cloudflare `Workers`](https://developers.cloudflare.com/workers/get-started/). Each `Worker` has a different responsibility.
+
+Read the documentation:
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) to learn about `Workers` and how to create/use one yourself.
+- [D1 database](https://developers.cloudflare.com/d1/get-started/) to learn how to setup a `D1` database, and interact with it using a Cloudflare `Worker`.
+
+The steps described below are derived from this documentation ☝️.
+
+### Setup the `Database` Worker
+
+The `Database` Worker is responsible for handling database requests. It exposes different `API` routes and interact with a D1 database.
+
+#### Install dependencies
+
+```sh
+cd backend/database
+npm install
+```
+
+#### Generate the database schema
+
+In the `backend/database` folder run:
+
+```sh
+npm run generate
+```
+
+It generate the schema to be used when creating the database a couple of steps later. After running this command, you should see a new `.sql` file appear in the `drizzle` folder. You can open the file and see what's inside! It's just raw SQL commands. The file describes the schema of the database that will created later. 💁‍♂️
+
+#### Create a local D1 database 
+
+Inside your `backend/database` folder, create a new `D1` database with the following command:
+
+```sh
+npx wrangle d1 create <database-name>
+```
+
+This command will output something like this:
+
+```txt
+✅ Successfully create DB '<database-name>'
+
+[[d1_databases]]
+binding = "DB"
+database_name = "<database-name>"
+database_id = "<unique-ID-for-your-database>"
+```
+
+This output is the binding configuration needed in the next step. Keep it.
+
+#### Update the `wrangler.toml` file
+
+`wrangler.toml` is the configuration file used to customize the development and deployment setup for a Cloudflare `Worker`. The `Database` Worker is no exception. If you're following this tutorial for the first time, you do not have a `wrangler.toml` file, so a `wrangler.example.toml` is provided as an example. You can rename this file, or copy its content to a file named `wrangler.toml`.
+
+Using the output of the previous step, assign `database_name` and `database_id` their corresponding values.
+
+#### Configure your `D1` database
+
+With the `wrangler.toml` configured properly, we can initialize the database to run and test locally, first. Bootstrap your new D1 database by running:
+
+```sh
+npx wrangler d1 execute prod-d1-tutorial --local --file=<path-to-the-sql-file>
+```
+
+#### Deploy the `Database` Worker locally
+
+```sh
+npx wrangler dev
+```
+
+After deploying the Worker locally, the command will give you a URL (most likely `localhost:8787`) where your Worker is running. Assign the provided Worker URL to the `NEXT_PUBLIC_DATABASE_WORKER_URL` variable located in your `frontend/.env` file.
+
+Choose a super duper secret password, and assign it to the `NEXT_PUBLIC_WORKERS_KEY` variable in the `frontend/.env` file. Assign the very same password to the `AUTH_KEY` variable located inside your `backend/database/wrangler.toml`.
+
+
+## Run the CodeMentor application on your computer
 
 Launch the development server:
 
@@ -72,43 +149,47 @@ Launch the development server:
 npm run dev
 ```
 
-### Backend
-
-The project has no backend, yet. Will populate this section once we start building it 🤣.
+This command will give you a URL (most likely `localhost:3000`) where CodeMentor is running. Copy and paste this URL in your web browser. You can try to register/login on the platform.
 
 # Project Structure
 
 ```txt
 .
 ├── backend
-└── frontend
-    ├── app
-    ├── assets
-    ├── components
-    ├── lib
-    └── public
+│   └── database
+├── frontend
+│   ├── app
+│   ├── assets
+│   ├── components
+│   ├── lib
+│   ├── node_modules
+│   └── public
+└── node_modules
 ```
 | Path               | Description                                                                |
 | ------------------ | -------------------------------------------------------------------------- |
 | `frontend`         | The Next.js application for the frontend.                                  |
+| `backend/database` | API for interfacing with the D1 database (SQLite).
 
 # How to contribute Code to the repository?
 
 ## Ensure you're on the `main` branch
 
-Before proceeding, ensure that you're on the `main` branch with:
+Before proceeding, ensure that you're on the `main` branch, and have the latest changes with:
 
 ```sh
 git checkout main
+git pull origin main
 ```
-This command will switch you to the `main` branch if you're not already on it. If you're already on the `main` branch, it will simply tell you that you're already there.
 
-## Create a new branch
+The first command will switch you to the `main` branch if you're not already on it. If you're already on the `main` branch, it will simply tell you that you're already there. The second updates your local repository with the latest changes from the remote repository. It fetches the latest changes from the `main` branch on GitHub and merges them into the local branch you currently on.
 
-To create a new branch for your feature, bug fix, or documentation update. Use a descriptive name for your branch that indicates the purpose of the changes. In this example, we'll create a branch called `feature/short-description`.
+## Create a new branch and switch to it
+
+To implement your feature, bug fix, or documentation update, create a new branch and switch to it. When naming your branch, use a descriptive name that indicate the purpose of the changes. In this example, let's create a branch called `feature/short-description` and switch to it.
 
 ```sh
-# Create a new branch
+# Create a new branch and switch to the newly created branch
 git checkout -b feature/short-description
 ```
 Examples of Branch Names:
@@ -120,6 +201,8 @@ Examples of Branch Names:
 - `docs/update-readme`
 
 - `refactor/code-cleanup`
+
+At this point, you're no longer on the `main` branch, but on the `feature/short-description` branch.
 
 ## Make your changes
 
