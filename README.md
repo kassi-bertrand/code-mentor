@@ -128,7 +128,7 @@ Using the output of the previous step, assign `database_name` and `database_id` 
 With the `wrangler.toml` configured properly, we can initialize the database to run and test locally, first. Bootstrap your new D1 database by running:
 
 ```sh
-npx wrangler d1 execute <database-namel> --local --file=<path-to-the-sql-file>
+npx wrangler d1 execute <database-name> --local --file=<path-to-the-sql-file>
 ```
 
 #### Deploy the `Database` Worker locally
