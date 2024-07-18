@@ -32,7 +32,8 @@ Before you begin, ensure you have met the following requirements:
 - You have installed Node.js (v18.17.0 or higher).
 - You have a Git client installed (v2.30.0 or higher).
 - You have npm installed (v10.8.1 or higher).
-
+- you have wrangler installed (v10.7.0 or higher)
+  
 ## Start by cloning the repository with:
 
 ```sh
@@ -100,7 +101,7 @@ It generate the schema to be used when creating the database a couple of steps l
 Inside your `backend/database` folder, create a new `D1` database with the following command:
 
 ```sh
-npx wrangle d1 create <database-name>
+npx wrangler d1 create <database-name>
 ```
 
 This command will output something like this:
@@ -127,7 +128,7 @@ Using the output of the previous step, assign `database_name` and `database_id` 
 With the `wrangler.toml` configured properly, we can initialize the database to run and test locally, first. Bootstrap your new D1 database by running:
 
 ```sh
-npx wrangler d1 execute prod-d1-tutorial --local --file=<path-to-the-sql-file>
+npx wrangler d1 execute <database-name> --local --file=<path-to-the-sql-file>
 ```
 
 #### Deploy the `Database` Worker locally
