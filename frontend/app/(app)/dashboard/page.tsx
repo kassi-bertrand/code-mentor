@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { User } from "@/lib/types";
+import "./styles.css";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -26,6 +27,34 @@ export default async function DashboardPage() {
 
   return (
     // The dashboard code will come here. The line below is a placeholder.
-    <div>Welcome on the dashboard page! It's currently being implemented by Arya and Aashna</div>
-  )
+    <div className="dashboard">
+    <p className="greeting">Hello {userData.name}!</p>
+    <div className="grid-container">
+      <button className="button">+</button>
+      <div className="button-white">
+        <div className="blue-bottom"></div>
+        <div className="text">PlaygroundName</div>
+      </div>
+      <div className="button-white">
+        <div className="blue-bottom"></div>
+        <div className="text">PlaygroundName</div>
+      </div>
+      <div className="button-white">
+        <div className="blue-bottom"></div>
+        <div className="text">PlaygroundName</div>
+      </div>
+      <div className="button-white">
+        <div className="blue-bottom"></div>
+        <div className="text">PlaygroundName</div>
+      </div>
+      <div className="button-white">
+        <div className="blue-bottom"></div>
+        <div className="text">PlaygroundName</div>
+      </div>
+    </div>
+       
+  </div>
+);
 }
+  
+
