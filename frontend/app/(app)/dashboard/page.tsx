@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { User } from "@/lib/types";
 import "./styles.css";
+import VerticalNavBar from "../components/navigation/navbar";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -26,7 +27,8 @@ export default async function DashboardPage() {
   // TODO: Query information about playgrounds this user has shared.
 
   return (
-    // The dashboard code will come here. The line below is a placeholder.
+    <div>
+    <VerticalNavBar/>
     <div className="dashboard">
     <p className="greeting">Hello {userData.name}!</p>
     <div className="grid-container">
@@ -53,6 +55,7 @@ export default async function DashboardPage() {
       </div>
     </div>
        
+  </div>
   </div>
 );
 }
