@@ -8,10 +8,13 @@ import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
+import { SlPencil } from "react-icons/sl";
+
 
 
 
 const VerticalNavBar = () => {
+    const [showModal, setShowModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     return(
         <div className = 'flex'>
@@ -24,10 +27,10 @@ const VerticalNavBar = () => {
             <div className = "w-full p-2 mt-12 px-4 ">
 
 
-                <button className="hover:bg-[#FFFBFB] w-full py-4 rounded-[10px] bg-[#D9D9D9] font-inter">
+                <button className="hover:bg-[#FFFBFB] w-full py-4 rounded-[10px] bg-[#D9D9D9] font-inter" onClick = {() => setShowModal(true)}>
                    
                 <Link href="">
-                    <span className ='text-xl font-bold text-black text-xl sm:text-base'>Create New</span>
+                    <span className ='text-xl font-bold text-black text-base sm:text-xl'>Create New</span>
                         <FaPlus className='inline-block mx-3'/> 
                     </Link>
                     
@@ -113,7 +116,7 @@ const VerticalNavBar = () => {
         {/* Button to toggle sidebar */}
         <div className="ml-auto">
           <button
-            className="bg-blue-500 bg-black 
+            className="bg-black
                        text-white font-bold py-2 px-4 rounded"
             onClick={() => setIsOpen(!isOpen)}>
             {/* Toggle icon based on isOpen state */}
@@ -137,10 +140,36 @@ const VerticalNavBar = () => {
           </button>
         </div>
         </div>
+
+        <div className = "z-20">
+            {showModal ? (
+                <div className = "fixed inset-0 flex justify-center items-center bg-black/10">
+                <div className = "bg-white w-3/4 h-3/4 flex flex-col place-content-center border-[0.5px] border-black rounded-[10px]">
+                    <div className = "basis-2/12 px-6 py-8 grid grid-flow-col justify-start">
+                    <h3 className = "text-xl font-bold md:text-3xl"> Create New Playground </h3>
+                    <SlPencil className = "w-6 h-6 mx-2 md:w-8 h-8 "/>
+                    </div>
+                    <div className = "basis-8/12 p-6">
+                    <textarea placeholder ="What topics would you like to learn today?" className ="resize-none overflow-y-auto overflow-x-hidden w-full h-full bg-[#D9D9D9] p-3">
+                    </textarea>
+                    </div>
+                    <div className = "basis-2/12 px-6 py-8 grid grid-flow-col gap-4">
+                    <button className ="bg-black text-white px-4 py-2" onClick = {() => setShowModal(false)}>
+                        Cancel
+                    </button>
+                    <button className = "bg-[#8CC0D6] px-4 py-2">Generate</button>
+                    </div>
+                </div> 
+                </div>
+                
+            ):
+                null
+            }
+            
+        </div>
         </div>
     )
 
 }
 
 export default VerticalNavBar;
-
