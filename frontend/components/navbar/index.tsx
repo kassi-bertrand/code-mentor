@@ -144,22 +144,22 @@ const VerticalNavBar = () => {
         <div className = "z-20">
             {showModal ? (
                 <div className = "fixed inset-0 flex justify-center items-center bg-black/10">
-                <div className = "bg-white w-3/4 h-3/4 flex flex-col place-content-center border-[0.5px] border-black rounded-[10px]">
-                    <div className = "basis-2/12 px-6 py-8 grid grid-flow-col justify-start">
-                    <h3 className = "text-xl font-bold md:text-3xl"> Create New Playground </h3>
-                    <SlPencil className = "w-6 h-6 mx-2 md:w-8 h-8 "/>
-                    </div>
-                    <div className = "basis-8/12 p-6">
-                    <textarea placeholder ="What topics would you like to learn today?" className ="resize-none overflow-y-auto overflow-x-hidden w-full h-full bg-[#D9D9D9] p-3">
-                    </textarea>
-                    </div>
-                    <div className = "basis-2/12 px-6 py-8 grid grid-flow-col gap-4">
-                    <button className ="bg-black text-white px-4 py-2" onClick = {() => setShowModal(false)}>
-                        Cancel
-                    </button>
-                    <button className = "bg-[#8CC0D6] px-4 py-2">Generate</button>
-                    </div>
-                </div> 
+                    <div className = "bg-white w-3/4 h-3/4 flex flex-col place-content-center border-[0.5px] border-black rounded-[10px]">
+                        <div className = "basis-2/12 px-6 py-8 grid grid-flow-col justify-start">
+                            <h3 className = "text-xl font-bold md:text-3xl"> Create New Playground </h3>
+                            <SlPencil className = "w-6 h-6 mx-2 md:w-8 h-8 "/>
+                        </div>
+                        <div className = "basis-8/12 p-6">
+                            <textarea placeholder ="What topics would you like to learn today?" className ="resize-none overflow-y-auto overflow-x-hidden w-full h-full bg-[#D9D9D9] p-3">
+                            </textarea>
+                        </div>
+                        <div className = "basis-2/12 px-6 py-8 grid grid-flow-col gap-4">
+                            <button className ="bg-black text-white px-4 py-2" onClick = {() => setShowModal(false)}>
+                            Cancel
+                            </button>
+                            <button className = "bg-[#8CC0D6] px-4 py-2">Generate</button>
+                        </div>
+                    </div> 
                 </div>
                 
             ):

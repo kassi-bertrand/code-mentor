@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { User } from "@/lib/types";
 import "./styles.css";
-import VerticalNavBar from "../components/navigation/navbar";
+import VerticalNavBar from "../../../components/navbar";
 
 export default async function DashboardPage() {
   const user = await currentUser();
