@@ -53,6 +53,5 @@ export default async function AppAuthLayout({
   }
 
    // Render the child components (i.e., the actual page content)
-  return <>
-  {children}</>
+  return <>{children}</>
 }
