@@ -22,42 +22,39 @@ export default async function DashboardPage() {
     }
   );
 
-  const userData = (await userRes.json()) as User
+  const userData = (await userRes.json()) as User;
 
   // TODO: Query information about playgrounds this user has shared.
 
   return (
     <div>
-    <VerticalNavBar/>
-    <div className="dashboard">
-    <p className="greeting">Hello {userData.name}!</p>
-    <div className="grid-container">
-      <button className="button">+</button>
-      <div className="button-white">
-        <div className="blue-bottom"></div>
-        <div className="text">PlaygroundName</div>
-      </div>
-      <div className="button-white">
-        <div className="blue-bottom"></div>
-        <div className="text">PlaygroundName</div>
-      </div>
-      <div className="button-white">
-        <div className="blue-bottom"></div>
-        <div className="text">PlaygroundName</div>
-      </div>
-      <div className="button-white">
-        <div className="blue-bottom"></div>
-        <div className="text">PlaygroundName</div>
-      </div>
-      <div className="button-white">
-        <div className="blue-bottom"></div>
-        <div className="text">PlaygroundName</div>
+      <VerticalNavBar />
+      <div className="dashboard">
+        <p className="greeting">Hello {userData.name}!</p>
+        <div className="grid-container">
+          <button className="button">+</button>
+          <div className="button-white">
+            <div className="blue-bottom"></div>
+            <div className="text">PlaygroundName</div>
+          </div>
+          <div className="button-white">
+            <div className="blue-bottom"></div>
+            <div className="text">PlaygroundName</div>
+          </div>
+          <div className="button-white">
+            <div className="blue-bottom"></div>
+            <div className="text">PlaygroundName</div>
+          </div>
+          <div className="button-white">
+            <div className="blue-bottom"></div>
+            <div className="text">PlaygroundName</div>
+          </div>
+          <div className="button-white">
+            <div className="blue-bottom"></div>
+            <div className="text">PlaygroundName</div>
+          </div>
+        </div>
       </div>
     </div>
-       
-  </div>
-  </div>
-);
+  );
 }
-  
-
