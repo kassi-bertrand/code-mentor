@@ -36,7 +36,7 @@ Before you begin, ensure you have met the following requirements:
   
 ## Start by cloning the repository with:
 
-```
+```sh
 git clone https://github.com/kassi-bertrand/code-mentor.git
 ```
 
@@ -47,15 +47,15 @@ git clone https://github.com/kassi-bertrand/code-mentor.git
 To run the frontend, enter the `frontend` folder, then install the packages with:
 
 ```sh
-cd frontend 
-npm install 
+cd frontend
+npm install
 ```
 
 ### Setup User authentication using `Clerk`
 
 Those steps are important to be able to test the Sign-In/Sign-Up functionalities.
 
-1. For this, head over to [Clerk](https://clerk.com), and create an account. 
+1. For this, head over to [Clerk](https://clerk.com), and create an account.
 
 2. Create a new application, give it the name you want 💁‍♂️🙃.
 
@@ -95,7 +95,7 @@ npm run generate
 ```
 
 It generate the schema to be used when creating the database a couple of steps later. After running this command, you should see a new `.sql` file appear in the `drizzle` folder. You can open the file and see what's inside! It's just raw SQL commands. The file describes the schema of the database that will created later. 💁‍♂️
- 
+
 #### Create a local D1 database 
 
 Inside your `backend/database` folder, create a new `D1` database with the following command:
@@ -150,7 +150,7 @@ Launch the development server:
 npm run dev
 ```
 
-This command will give you a URL (most likely `localhost:3000`) where CodeMentor is running. Copy and paste this URL in your web browser. You can try to register/login on the platform
+This command will give you a URL (most likely `localhost:3000`) where CodeMentor is running. Copy and paste this URL in your web browser. You can try to register/login on the platform.
 
 # Project Structure
 
@@ -316,6 +316,6 @@ git pull origin main
 # Delete the branch locally
 git branch -d feature/short-description
 
-# Delete the branch from the main repository on GitHub
+# Delete the branch from the main respository on GitHub
 git push origin --delete feature/short-description
 ```
