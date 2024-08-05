@@ -1,6 +1,8 @@
+
 import { User } from "@/lib/types";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+
 
 // This layout component is used for all pages within the (app) folder.
 // It runs every time a user accesses a page in this folder, ensuring authentication and database synchronization.
@@ -51,5 +53,5 @@ export default async function AppAuthLayout({
   }
 
    // Render the child components (i.e., the actual page content)
-  return <>{children}</>;
+  return <>{children}</>
 }
