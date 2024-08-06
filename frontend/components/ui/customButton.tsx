@@ -8,6 +8,7 @@ const Button = ({
   onClick,
   type,
   disabled = false,
+  ...props // Spread operator to allow additional HTML button attributes
 }: {
   children: React.ReactNode
   className?: string
@@ -19,13 +20,23 @@ const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      type={type ?? "button"}
+      type={type}
       className={cn(
-        className,
-        `gradient-button-bg p-[1px] inline-flex group rounded-md text-sm font-medium focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50`
+        // Base styles
+        "inline-flex items-center justify-center rounded-md text-sm font-medium",
+        // Gradient background
+        "gradient-button-bg p-[1px]",
+        // Focus styles
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        // Disabled styles
+        "disabled:pointer-events-none disabled:opacity-50",
+        // Allow custom classes to override defaults
+        className
       )}
+      {...props}
     >
-      <div className="rounded-[6px] w-full gradient-button flex items-center justify-center whitespace-nowrap px-4 py-2 h-9">
+      {/* Inner container for content */}
+      <div className="gradient-button flex h-full w-full items-center justify-center rounded-[6px]">
         {children}
       </div>
     </button>
@@ -33,3 +44,38 @@ const Button = ({
 }
 
 export default Button
+
+// Example usage
+// import Button from "./Button"
+// import { Plus } from "lucide-react"
+
+// // Basic usage
+// <Button onClick={() => console.log("Clicked!")}>
+//   Click me
+// </Button>
+
+// // With custom className
+// <Button className="bg-blue-500 text-white">
+//   Blue Button
+// </Button>
+
+// // Disabled button
+// <Button disabled>
+//   Disabled Button
+// </Button>
+
+// // With icon
+// <Button>
+//   <Plus className="mr-2 h-4 w-4" /> Add Item
+// </Button>
+
+// // As a submit button in a form
+// <form onSubmit={handleSubmit}>
+//   {/* form fields */}
+//   <Button type="submit">Submit</Button>
+// </form>
+
+// // With custom attributes
+// <Button aria-label="Close dialog" onClick={closeDialog}>
+//   Close
+// </Button>
