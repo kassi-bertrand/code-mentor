@@ -15,11 +15,15 @@ import { LANGUAGE_VERSIONS } from "@/constants"
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { Weight } from "lucide-react";
 
+interface LanguageSelectorProps {
+  language: string;
+  onSelect: (lang: string) => void;
+}
 
 
 const languages= Object.entries(LANGUAGE_VERSIONS)
 
-const LanguageSelector = ({language, onSelect}) => {
+const LanguageSelector: React.FC<LanguageSelectorProps>= ({language, onSelect}) => {
   return (
     <div className = "flex items-center">
       <span className = "font-medium mr-2"> Language : </span>
