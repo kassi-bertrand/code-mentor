@@ -11,6 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    //added here for less strict usage when converting form javascript
+    "noImplicitAny": false,
     "incremental": true,
     "plugins": [
       {
