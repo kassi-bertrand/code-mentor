@@ -16,7 +16,7 @@ import { ImperativePanelHandle } from "react-resizable-panels"
 import { CodeXml, Plus, Swords, Terminal } from "lucide-react"
 import Button from "../ui/customButton"
 import { executeCode } from "@/piston_api"
-import { LANGUAGE_VERSIONS } from "@/constants"
+import { CODE_SNIPPETS } from "@/constants"
 
 // TODO: This component needs three props
 //  - Information about the playground itself
@@ -140,6 +140,8 @@ export default function Playground({
                 height="calc(100% - 40px)"
                 language={editorLanguage}
                 value={activeFileContent}
+                /*Can add default code snippets here */
+                // defaultValue= {CODE_SNIPPETS[language]}
                 beforeMount={handleEditorWillMount}
                 onMount={handleEditorMount}
                 options={{
