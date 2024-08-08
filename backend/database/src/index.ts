@@ -3,7 +3,7 @@ import { json } from 'itty-router';
 import { ZodError, z } from 'zod';
 
 import * as schema from './schema';
-import { user } from './schema';
+import { user, playground } from './schema';
 import { and, eq, sql } from 'drizzle-orm';
 
 export interface Env {
@@ -84,6 +84,112 @@ export default {
 				} else {
 					return invalidRequest
 				}
+			}
+			else {
+				return methodNotAllowed
+			}
+		}
+		// Handle '/api/playground' endpoint
+		else if(path == '/api/playground') {
+			if (method == "PUT"){
+				const initSchema = z.object({
+					name: z.string(),
+					type: z.enum([
+						'typescript',
+						'javascript',
+						'python',
+						'java',
+						'ruby',
+						'php',
+						'csharp',
+						'cpp',
+						'go',
+						'rust',
+						'kotlin',
+						'swift',
+						'objective-c',
+						'scala',
+						'shell',
+						'sql',
+						'perl',
+						'r',
+						'dart',
+						'lua',
+						'groovy',
+						'haskell',
+						'erlang',
+						'elixir',
+						'clojure',
+						'coffeescript',
+						'ocaml',
+						'fsharp',
+						'scheme',
+						'vbscript',
+						'powershell',
+						'matlab',
+						'json',
+						'xml',
+						'yaml',
+						'toml',
+						'ini',
+						'markdown',
+						'html',
+						'css',
+						'scss',
+						'less',
+						'svg',
+						'plaintext',
+					]),
+					userId: z.string(),
+					visibility: z.enum(["public", "private"]),
+				})
+
+				// Validate the frontend request using Zod.
+				// It ensures the body of the request adheres 
+				// to the previously defined schema.
+				const body = await request.json()
+				const { name, type, userId, visibility} = initSchema.parse(body)
+
+				// Let's find out how many playgrounds 
+				// the user creating this new playground already has
+				const userPlaygrounds = await db
+						.select()
+						.from(playground)
+						.where(eq(playground.userId, userId))
+						.all()
+				
+				if (userPlaygrounds.length >= 10) {
+					return new Response("You reached the maximum # of playgrounds.", {
+						status: 400,
+					})
+				}
+
+				// Create a record in the playground table
+				const pg = await db
+						.insert(playground)
+						.values({name, type, userId, visibility, createdAt: new Date() })
+						.returning()
+						.get()
+
+				// Tell the Storage worker to create a new space of this playground.
+				// NOTE: This endpoint in the storage worker is yet to be implemented
+				const initStorageRequest = new Request(
+					`${env.STORAGE_WORKER_URL}/api/init`,
+					{
+						method: "POST",
+						body: JSON.stringify({playgroundId: pg.id, type}),
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `${env.AUTH_KEY}`,
+						}
+					}
+				)
+
+				await env.STORAGE.fetch(initStorageRequest)
+
+				// Return success response
+				return new Response(pg.id, { status: 200})
+
 			}
 			else {
 				return methodNotAllowed
