@@ -9,7 +9,9 @@ import { and, eq, sql } from 'drizzle-orm';
 export interface Env {
 	// Environment variables written here were defined first defined in wrangler.example.toml
 	DB: D1Database;
+	STORAGE: any;
 	AUTH_KEY: string;
+	STORAGE_WORKER_URL: string;
 }
 
 export default {
