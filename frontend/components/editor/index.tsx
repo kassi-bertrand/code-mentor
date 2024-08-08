@@ -15,14 +15,19 @@ import { User } from "@/lib/types"
 import { ImperativePanelHandle } from "react-resizable-panels"
 import { CodeXml, Plus, Swords, Terminal } from "lucide-react"
 import Button from "../ui/customButton"
+import { executeCode } from "@/piston_api"
+import { LANGUAGE_VERSIONS } from "@/constants"
 
 // TODO: This component needs three props
 //  - Information about the playground itself
 //  - Starter code?
+
 export default function Playground({
   userData,
+  language,
 }: {
-  userData: User
+  userData: User;
+  language: string;
 }){
 
   // File states?
@@ -30,7 +35,7 @@ export default function Playground({
   const [activeFileContent, setActiveFileContent] = useState("")
 
   // Monaco code editor state
-  const [editorLanguage, setEditorLanguage] = useState("plaintext")
+  const [editorLanguage, setEditorLanguage] = useState(language)
   const [cursorLine, setCursorLine] = useState(0)
   const [editorRef, setEditorRef] = useState<monaco.editor.IStandaloneCodeEditor>()
 
@@ -69,6 +74,36 @@ export default function Playground({
     editor.onDidBlurEditorText((e) => {
     })
   }
+
+  // Set output state to update as the Run Code button is pressed
+  const [output, setOutput] = useState<string[] | null>(null);
+
+  const[isLoading, setIsLoading] = useState(false)
+
+  // To handle errors in code compilation
+  const [isError, setIsError] = useState(false)
+
+  // Handle Run Code button to see the output
+  const runCode = async() => {
+    const sourceCode = editorRef?.getValue();
+    // if there is no source code, return no output
+    if(!sourceCode) return;
+    // request to Piston API to fetch the output
+    try{
+      setIsLoading(true);
+      const {run:result} = await executeCode(editorLanguage, sourceCode);
+      setOutput(result.output.split("\n"));
+      result.stderr ? setIsError(true) : setIsError(false);
+    } catch (error) {
+      console.log(error);
+      // sends an error message to the output section if the API does not run 
+      // Toast from Chakra UI
+    } finally {
+      setIsLoading(false);
+    }
+
+  }
+
 
   return(
     <ResizablePanelGroup direction="horizontal" className="h-screen bg-gray-200">
@@ -129,9 +164,12 @@ export default function Playground({
             {/* Terminal panel */}
             <div className="h-full">
               <div className="bg-gray-50 p-1 flex justify-between items-center">
-                <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
-                  <Terminal className="mr-1 h-5 w-5" color="#02b028"/> Terminal
+                <Button onClick = {runCode} className="bg-transparent px-2 py-1 hover:bg-gray-200">
+                  <Terminal className="mr-1 h-5 w-5" color="#02b028"/> Run Code
                 </Button>
+              </div>
+              <div className="h-full p-4 overflow-auto" >
+                {output ? output.map((line, i) => <div key={i} className = {`${isError ? "text-red-500": ""}`}>{line}</div>): "Click 'Run Code' to see the output here!"}
               </div>
             </div>
           </ResizablePanel>

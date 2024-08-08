@@ -11,6 +11,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { SlPencil } from "react-icons/sl";
 import LanguageSelector from "../language-selector";
 import LevelSelector from "../level-selector";
+import { CODE_SNIPPETS } from "@/constants";
 
 const VerticalNavBar = () => {
     const [showModal, setShowModal] = useState(false);
@@ -20,13 +21,15 @@ const VerticalNavBar = () => {
 
     const onSelect = (language : string) => {
         setLanguage(language);
-        //setValue(CODE_SNIPPETS[language])
-    
+        setUrl(`/code/id/${language}`)
+        // setValue(CODE_SNIPPETS[language])
     };
     
     const onChoose = (level : string) => {
         setLevel(level);
     }
+
+    const[url, setUrl] = useState('/dashboard/')
 
     return(
         <div className = 'flex'>
@@ -177,7 +180,11 @@ const VerticalNavBar = () => {
                             <button className ="bg-black text-white px-4 py-2" onClick = {() => setShowModal(false)}>
                             Cancel
                             </button>
-                            <button className = "bg-[#8CC0D6] px-4 py-2">Generate</button>
+                            <button className = "bg-[#8CC0D6] px-4 py-2">
+                                <Link href = {url}>
+                                    Generate 
+                                </Link>
+                            </button>
                         </div>
                     </div> 
                 </div>
