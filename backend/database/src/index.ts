@@ -191,6 +191,22 @@ export default {
 				return new Response(pg.id, { status: 200})
 
 			}
+			else if (method == "GET"){
+				const params = url.searchParams
+				// if the request has an id, GET the playgrounds associated with it
+				// otherwise return ALL playgrounds :)
+				if (params.has("id")){
+					const id = params.get("id") as string
+					const res = await db.query.playground.findFirst({
+						where: (sandbox, { eq }) => eq(sandbox.id, id),
+					})
+					return json(res ?? {})
+				}
+				else {
+					const res = await db.select().from(playground).all()
+					return json(res ?? {})
+				}
+			}
 			else {
 				return methodNotAllowed
 			}
