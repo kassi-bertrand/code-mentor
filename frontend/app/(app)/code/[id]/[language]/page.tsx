@@ -27,7 +27,7 @@ const Playground = dynamic(() => import("@/components/editor"), {
   // loading: () => <Loading />, TODO: Implement loading component.
 })
 
-export default async function PlaygroundPage({ params }: { params: { id: string } }) {
+export default async function PlaygroundPage({ params }: { params: { id: string; language: string } }) {
   const user = await currentUser();
 
   if (!user) {
@@ -41,7 +41,7 @@ export default async function PlaygroundPage({ params }: { params: { id: string 
       {/* TODO: NavBar component here. Props: UserData, PlaygroundData, IsShared?. */}
       <div className="w-screen flex grow">
         <Playground
-          userData={userData}
+          userData={userData} language = {params.language}
         />
       </div>
     </div>

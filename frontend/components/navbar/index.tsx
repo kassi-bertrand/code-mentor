@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {GoHome} from 'react-icons/go';
 import {FaPlus} from 'react-icons/fa';
 import { GiKidSlide } from "react-icons/gi";
@@ -9,13 +9,28 @@ import { IoSettingsOutline } from "react-icons/io5";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import { SlPencil } from "react-icons/sl";
-
-
-
+import LanguageSelector from "../language-selector";
+import LevelSelector from "../level-selector";
+import { CODE_SNIPPETS } from "@/constants";
 
 const VerticalNavBar = () => {
     const [showModal, setShowModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [language, setLanguage] = useState('Choose language');
+    const[level, setLevel] = useState('Choose level');
+
+    const onSelect = (language : string) => {
+        setLanguage(language);
+        setUrl(`/code/id/${language}`)
+        // setValue(CODE_SNIPPETS[language])
+    };
+    
+    const onChoose = (level : string) => {
+        setLevel(level);
+    }
+
+    const[url, setUrl] = useState('/dashboard/')
+
     return(
         <div className = 'flex'>
             <div className={`mt-0 bg-[#8CC0D6] 
@@ -144,12 +159,20 @@ const VerticalNavBar = () => {
         <div className = "z-20">
             {showModal ? (
                 <div className = "fixed inset-0 flex justify-center items-center bg-black/10">
-                    <div className = "bg-white w-3/4 h-3/4 flex flex-col place-content-center border-[0.5px] border-black rounded-[10px]">
+                    <div className = "bg-white  flex flex-col place-content-center border-[0.5px] border-black rounded-[10px] w-[500px] h-[600px] md:w-3/4 md:h-3/4 ">
                         <div className = "basis-2/12 px-6 py-8 grid grid-flow-col justify-start">
                             <h3 className = "text-xl font-bold md:text-3xl"> Create New Playground </h3>
                             <SlPencil className = "w-6 h-6 mx-2 md:w-8 h-8 "/>
                         </div>
-                        <div className = "basis-8/12 p-6">
+                        <div className = "basis-2/12 md:grid md:grid-flow-col">
+                            <div className = "px-6 w-[500px] md:w-auto mb-2 md:mb-0">
+                                <LanguageSelector language = {language} onSelect = {onSelect}/>
+                            </div>
+                            <div className = "px-6 w-[500px] md:w-auto mt-2 md:mt-0">
+                                <LevelSelector level = {level} onChoose = {onChoose}/>
+                            </div>
+                        </div>
+                        <div className = "basis-6/12 px-6">
                             <textarea placeholder ="What topics would you like to learn today?" className ="resize-none overflow-y-auto overflow-x-hidden w-full h-full bg-[#D9D9D9] p-3">
                             </textarea>
                         </div>
@@ -157,7 +180,11 @@ const VerticalNavBar = () => {
                             <button className ="bg-black text-white px-4 py-2" onClick = {() => setShowModal(false)}>
                             Cancel
                             </button>
-                            <button className = "bg-[#8CC0D6] px-4 py-2">Generate</button>
+                            <button className = "bg-[#8CC0D6] px-4 py-2">
+                                <Link href = {url}>
+                                    Generate 
+                                </Link>
+                            </button>
                         </div>
                     </div> 
                 </div>

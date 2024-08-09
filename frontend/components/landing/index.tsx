@@ -62,7 +62,7 @@ export default function Landing() {
           capabilities to provide practice, assessment, and feedback for your coding skills.
         </div>
         <div className="mt-8 flex space-x-4">
-          <Link href="/sign-up"> {/*TODO: Implement sign-up page */}
+          <Link href="/sign-in"> {/*TODO: Link to the sign-in page */}
             <Button className="bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">Get Started</Button >
           </Link>
           <a
