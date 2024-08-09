@@ -112,6 +112,27 @@ export default {
 
 			return success
 		}
+		else if (path === "/api/project" && method === "DELETE"){
+			const deleteSchema = z.object({
+				playgroundId: z.string(),
+			})
+
+			const body = await request.json()
+			const { playgroundId } = deleteSchema.parse(body)
+
+			const res = await env.R2.list({ prefix: "projects/" + playgroundId })
+
+			// delete all files related to the project
+			await Promise.all(
+				res.objects.map(
+					async (file) => {
+						await env.R2.delete(file.key)
+					}
+				)
+			)
+
+			return success
+		}
 		else {
 			return notFound
 		}
