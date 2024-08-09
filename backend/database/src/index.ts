@@ -4,7 +4,7 @@ import { ZodError, z } from 'zod';
 
 import * as schema from './schema';
 import { user, playground } from './schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, param, sql } from 'drizzle-orm';
 
 export interface Env {
 	// Environment variables written here were defined first defined in wrangler.example.toml
@@ -90,8 +90,8 @@ export default {
 			}
 		}
 		// Handle '/api/playground' endpoint
-		else if(path == '/api/playground') {
-			if (method == "PUT"){
+		else if(path === '/api/playground') {
+			if (method === "PUT"){
 				const initSchema = z.object({
 					name: z.string(),
 					type: z.enum([
@@ -191,7 +191,7 @@ export default {
 				return new Response(pg.id, { status: 200})
 
 			}
-			else if (method == "GET"){
+			else if (method === "GET"){
 				const params = url.searchParams
 				// if the request has an id, GET the playgrounds associated with it
 				// otherwise return ALL playgrounds :)
@@ -205,6 +205,36 @@ export default {
 				else {
 					const res = await db.select().from(playground).all()
 					return json(res ?? {})
+				}
+			}
+			else if (method === "DELETE"){
+				const params = url.searchParams
+				if (params.has("id")){
+					const id = params.get("id") as string
+					
+					// Delete the playground the user created from the "playground" table
+					await db.delete(playground).where(eq(playground.id, id))
+
+					// Now, send an HTTP "DELETE" request to the Storage worker's "/api/project"
+					// endpoint to delete the files associated with the playground
+					const deleteStorageRequest = new Request(
+						`${env.STORAGE_WORKER_URL}/api/project`,
+						{
+							method: "DELETE",
+							body: JSON.stringify({ playgroundId: id }),
+							headers : {
+								"Content-Type": "application/json",
+								Authorization: `${env.AUTH_KEY}`,
+							}
+						}
+					)
+
+					await env.STORAGE.fetch(deleteStorageRequest)
+
+					return success
+				}
+				else {
+					return invalidRequest
 				}
 			}
 			else {
