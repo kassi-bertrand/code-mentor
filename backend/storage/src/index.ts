@@ -98,6 +98,20 @@ export default {
 
 			return success
 		}
+		else if (path === "/api/rename" && method === "POST"){
+			const renameSchama = z.object({
+				fileId: z.string(),
+				newFileId: z.string(),
+				data: z.string(),
+			})
+
+			const body = await request.json()
+			const { fileId, data } = renameSchama.parse(body)
+
+			await env.R2.put( fileId, data)
+
+			return success
+		}
 		else {
 			return notFound
 		}
