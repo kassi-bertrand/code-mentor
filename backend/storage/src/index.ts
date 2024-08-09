@@ -21,7 +21,7 @@ export default {
 		const path = url.pathname
 		const method = request.method
 
-		if (path == '/api/init' && method == "POST") {
+		if (path === '/api/init' && method === "POST") {
 			const initSchema = z.object({
 				playgroundId: z.string(),
 				type: z.enum([
@@ -82,6 +82,19 @@ export default {
 					}
 				)
 			)
+
+			return success
+		}
+		else if (path === "/api/save" && method === "POST"){
+			const renameSchama = z.object({
+				fileId: z.string(),
+				data: z.string(),
+			})
+
+			const body = await request.json()
+			const { fileId, data } = renameSchama.parse(body)
+
+			await env.R2.put(fileId, data)
 
 			return success
 		}
