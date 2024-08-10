@@ -40,11 +40,15 @@ export default {
 			if (method === 'GET') {
 				const params = url.searchParams
 				if (params.has('id')) {
-					// Fetch a specific user by ID
+					// Fetch a specific user by ID, alongside their playground
 					const id = params.get('id') as string;
 					const res = await db.query.user.findFirst({
 						where: (user, { eq }) => eq(user.id, id),
-						// TODO: In addition of the user information, Grab the "playgrounds" associated with the user.
+						with:{
+							playground: {
+								orderBy: (playground, { desc }) => [desc(playground.createdAt)],
+							}
+						}
 					});
 					return json(res ?? {});
 				} else {
