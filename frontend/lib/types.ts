@@ -5,9 +5,61 @@ export type User = {
     name: string;
     email: string;
     generations: number;
-    // playground: Playground[];
+    playground: Playground[];
     // usersToSandboxes: UsersToSandboxes[];
 };
 
-// TODO: Define a "Playground" type
+export type Playground = {
+    id: string;
+    name: string;
+    type: 
+        | 'typescript'
+        | 'javascript'
+        | 'python'
+        | 'java'
+        | 'ruby'
+        | 'php'
+        | 'csharp'
+        | 'cpp'
+        | 'go'
+        | 'rust'
+        | 'kotlin'
+        | 'swift'
+        | 'objective-c'
+        | 'scala'
+        | 'shell'
+        | 'sql'
+        | 'perl'
+        | 'r'
+        | 'dart'
+        | 'lua'
+        | 'groovy'
+        | 'haskell'
+        | 'erlang'
+        | 'elixir'
+        | 'clojure'
+        | 'coffeescript'
+        | 'ocaml'
+        | 'fsharp'
+        | 'scheme'
+        | 'vbscript'
+        | 'powershell'
+        | 'matlab'
+        | 'json'
+        | 'xml'
+        | 'yaml'
+        | 'toml'
+        | 'ini'
+        | 'markdown'
+        | 'html'
+        | 'css'
+        | 'scss'
+        | 'less'
+        | 'svg'
+        | 'plaintext';
+    visibility: "public" | "private";
+    createdAt: Date;
+    userId: string;
+  };
+  
 // TODO: Define a "UsersToPlaygrounds" type
