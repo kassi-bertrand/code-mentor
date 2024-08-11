@@ -78,11 +78,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1)
-    .max(16)
-    .refine(
-      (value) => /^[a-zA-Z0-9_]+$/.test(value),
-      "Name must be alphanumeric and can contain underscores"
-    ),
+    .max(30),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
@@ -96,8 +92,6 @@ export function NewPlaygroundModal({
 }: NewPlaygroundModalProps) {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [language, setLanguage] = React.useState<Language | "">("");
-  const [description, setDescription] = React.useState("");
 
   // The "useUser" hook (i.e. function) allows us to access
   // information about the authenticated user, if there is one.
@@ -139,10 +133,10 @@ export function NewPlaygroundModal({
       };
 
       // Send an API request to the Database worker to Create the playground
-        const id = await createPlayground(playgroundData);
+      const id = await createPlayground(playgroundData);
 
       // redirect the user to the created playground page when playground is ready.
-        router.push(`/code/${id}`);
+      router.push(`/code/${id}`);
     } catch (error) {
       // Handle any errors here
       console.error("Error creating playground:", error);
