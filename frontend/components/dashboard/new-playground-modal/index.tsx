@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation"
-import { Check, ChevronsUpDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,6 +48,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@clerk/nextjs";
+import { createPlayground } from "@/lib/actions";
 
 const languages = [
   "typescript",
@@ -81,8 +83,8 @@ const formSchema = z.object({
       (value) => /^[a-zA-Z0-9_]+$/.test(value),
       "Name must be alphanumeric and can contain underscores"
     ),
-  description: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
   }),
   visibility: z.enum(["public", "private"]),
   language: z.string(),
@@ -96,8 +98,12 @@ export function NewPlaygroundModal({
   const [loading, setLoading] = React.useState(false);
   const [language, setLanguage] = React.useState<Language | "">("");
   const [description, setDescription] = React.useState("");
-  
-  const router = useRouter()
+
+  // The "useUser" hook (i.e. function) allows us to access
+  // information about the authenticated user, if there is one.
+  const user = useUser();
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,13 +115,40 @@ export function NewPlaygroundModal({
     },
   });
 
-  // 2. Define a submit handler.
+  // This function runs when the form is submitted.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("onSubmit function called", values);
+
     // if the user isn't sign-in, abort.
-    // form a json object using the form values
-    // Create the playground
-    // redirect the user to the playground page.
-    console.log(values);
+    console.log("User sign-in status:", user.isSignedIn);
+    if (!user.isSignedIn) {
+      console.log("User is not signed in, aborting submission");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // form a json object using the form values (i.e. playground information)
+      const playgroundData = {
+        name: values.name,
+        description: values.description,
+        visibility: values.visibility,
+        language: values.language,
+        userId: user.user.id,
+      };
+
+      // Send an API request to the Database worker to Create the playground
+        const id = await createPlayground(playgroundData);
+
+      // redirect the user to the created playground page when playground is ready.
+        router.push(`/code/${id}`);
+    } catch (error) {
+      // Handle any errors here
+      console.error("Error creating playground:", error);
+    } finally {
+      setLoading(false); // Set loading back to false when submission completes
+    }
   }
 
   return (
@@ -131,7 +164,21 @@ export function NewPlaygroundModal({
         <Form {...form}>
           <form
             autoComplete="off"
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("Form onSubmit triggered");
+              form.handleSubmit(
+                (values) => {
+                  console.log("Form values:", values);
+                  onSubmit(values).catch((error) =>
+                    console.error("onSubmit error:", error)
+                  );
+                },
+                (errors) => {
+                  console.error("Form validation errors:", errors);
+                }
+              )(e);
+            }}
             className="space-y-8"
           >
             <FormField
@@ -141,7 +188,11 @@ export function NewPlaygroundModal({
                 <FormItem className="mb-4">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="My Project" {...field} />
+                    <Input
+                      placeholder="My Project"
+                      {...field}
+                      disabled={loading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,12 +203,17 @@ export function NewPlaygroundModal({
               control={form.control}
               name="description"
               render={({ field }) => (
-                <Textarea
-                  id="description"
-                  placeholder="Describe what you want to learn..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe what you want to learn..."
+                      {...field}
+                      disabled={loading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
 
@@ -196,53 +252,76 @@ export function NewPlaygroundModal({
               control={form.control}
               name="language"
               render={({ field }) => (
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="justify-between"
-                    >
-                      {language ? language : "Select a programming language..."}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0">
-                    <Command>
-                      <CommandInput placeholder="Search language..." />
-                      <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
-                        <CommandGroup>
-                          {languages.map((lang) => (
-                            <CommandItem
-                              key={lang}
-                              onSelect={() => {
-                                setLanguage(lang === language ? "" : lang);
-                                setOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  language === lang
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {lang}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                <FormItem>
+                  <FormLabel>Language</FormLabel>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? languages.find(
+                                (language) => language === field.value
+                              )
+                            : "Select language"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput placeholder="Search language..." />
+                        <CommandList>
+                          <CommandEmpty>No language found.</CommandEmpty>
+                          <CommandGroup>
+                            {languages.map((language) => (
+                              <CommandItem
+                                value={language}
+                                key={language}
+                                onSelect={() => {
+                                  form.setValue("language", language);
+                                  setOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    language === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {language}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
               )}
             />
 
             <DialogFooter>
-              <Button type="submit">Create Playground</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Create Playground"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
