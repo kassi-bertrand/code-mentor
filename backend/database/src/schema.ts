@@ -62,7 +62,7 @@ export const playground = sqliteTable('playground', {
 
 	name: text('name').notNull(),
 
-	type: text('type', {
+	language: text('language', {
 		enum: [
 			'typescript',
 			'javascript',
