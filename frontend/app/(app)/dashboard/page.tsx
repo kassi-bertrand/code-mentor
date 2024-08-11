@@ -40,6 +40,7 @@ export default async function DashboardPage() {
         playgrounds={userData.playground}
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}
+        navCollapsedSize={4}
       />
     </div>
   );
