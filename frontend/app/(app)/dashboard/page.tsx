@@ -1,8 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { User } from "@/lib/types";
-import VerticalNavBar from "@/components/navbar";
 import Dashboard from "@/components/dashboard";
+import { cookies } from "next/headers"
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -24,12 +24,23 @@ export default async function DashboardPage() {
 
   const userData = (await userRes.json()) as User;
 
+    // Parse cookies
+    const cookieStore = cookies();
+    const layout = cookieStore.get("react-resizable-panels:layout:mail");
+    const collapsed = cookieStore.get("react-resizable-panels:collapsed");
+  
+    const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
+    const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
+
   // TODO: Query information about playgrounds this user has shared.
 
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden overscroll-none">
-      <VerticalNavBar />
-      <Dashboard playgrounds={userData.playground}/>
+      <Dashboard 
+        playgrounds={userData.playground}
+        defaultLayout={defaultLayout}
+        defaultCollapsed={defaultCollapsed}
+      />
     </div>
   );
 }
