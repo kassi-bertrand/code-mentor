@@ -12,7 +12,7 @@ export type User = {
 export type Playground = {
     id: string;
     name: string;
-    type: 
+    language: 
         | 'typescript'
         | 'javascript'
         | 'python'
