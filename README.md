@@ -197,6 +197,31 @@ npx wrangler dev
 
 Now, just like the `Database` Worker, this Worker will also be deployed.
 
+### Setup `Server`
+
+`Server` is a NodeJS application which acts as a websocket server for the project.
+
+Install dependencies with:
+
+```sh
+npm install
+```
+
+run the server with:
+
+```sh
+npx ts-node src/index.ts
+```
+
+After that, visit file like:
+
+- `frontend/.env`
+- `backend/database/.wrangler.toml`
+- `backend/storage/.wrangler.toml`
+- `backend/server/.env`
+
+Ensure that all the variables have their values assigned.
+
 ## Run the CodeMentor application on your computer
 
 Launch the development server:
