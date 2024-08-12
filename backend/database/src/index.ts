@@ -178,7 +178,9 @@ export default {
 
 				// TODO: I think this is where the LLM API call should happen.
 				// Tell OpenAI to generate a coding challenge based on the "description"
-				const dummyGeneratedChallenge = "Dummy generated challenge"
+				// Note: Use "fetch", not axios to keep the code in this worker consistent.
+				// Inspire yourself from API requests made in this very same file.
+				const generatedCodingChallenge = "Dummy generated challenge"
 
 				// Tell the Storage worker to create a new space of this playground.
 				// NOTE: This endpoint in the storage worker is yet to be implemented
@@ -186,7 +188,7 @@ export default {
 					`${env.STORAGE_WORKER_URL}/api/init`,
 					{
 						method: "POST",
-						body: JSON.stringify({playgroundId: pg.id, language: language, description: description}),
+						body: JSON.stringify({playgroundId: pg.id, language: language, description: generatedCodingChallenge}),
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `${env.AUTH_KEY}`,
