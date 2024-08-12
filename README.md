@@ -18,11 +18,9 @@ Code Mentor is an AI-Powered Interactive coding playground that integrates LLM c
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
   - [D1 database](https://developers.cloudflare.com/d1/)
   - [R2 storage](https://developers.cloudflare.com/r2/)
-  - [Workers AI](https://developers.cloudflare.com/workers-ai/)
 - [Express](https://expressjs.com/)
 - [Socket.io](https://socket.io/)
 - [Drizzle ORM](https://orm.drizzle.team/)
-- [E2B](https://e2b.dev/)
 
 # How to run this project locally
 
@@ -157,15 +155,15 @@ This command will give you a URL (most likely `localhost:3000`) where CodeMentor
 ```txt
 .
 ├── backend
-│   └── database
-├── frontend
-│   ├── app
-│   ├── assets
-│   ├── components
-│   ├── lib
-│   ├── node_modules
-│   └── public
-└── node_modules
+│   ├── database
+│   ├── server
+│   └── storage
+└── frontend
+    ├── app
+    ├── assets
+    ├── components
+    ├── lib
+    └── public
 ```
 | Path               | Description                                                                |
 | ------------------ | -------------------------------------------------------------------------- |
