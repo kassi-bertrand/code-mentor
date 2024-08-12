@@ -6,7 +6,6 @@ export type User = {
   email: string;
   generations: number;
   playground: Playground[];
-  // usersToSandboxes: UsersToSandboxes[];
 };
 
 export type Playground = {
@@ -62,42 +61,46 @@ export type Playground = {
   userId: string;
 };
 
-export type R2Files = {
-  objects: R2FileData[];
-  truncated: boolean;
-  delimitedPrefixes: any[];
-};
-
-export type R2FileData = {
-  storageClass: string;
-  uploaded: string;
-  checksums: any;
-  httpEtag: string;
-  etag: string;
-  size: number;
-  version: string;
-  key: string;
-};
-
 export type TFolder = {
-  id: string;
-  type: "folder";
-  name: string;
-  children: (TFile | TFolder)[];
-};
-
-export type TFile = {
-  id: string;
-  type: "file";
-  name: string;
-};
-
-export type TTab = TFile & {
-  saved: boolean;
-};
-
-export type TFileData = {
-  id: string;
-  data: string;
-};
-// TODO: Define a "UsersToPlaygrounds" type
+    id: string;
+    type: "folder";
+    name: string;
+    children: (TFile | TFolder)[];
+  };
+  
+  export type TFile = {
+    id: string;
+    type: "file";
+    name: string;
+  };
+  
+  export type TFileData = {
+    id: string;
+    data: string;
+  };
+  
+  export type R2Files = {
+    objects: R2FileData[];
+    truncated: boolean;
+    delimitedPrefixes: any[];
+  };
+  
+  export type R2FileData = {
+    storageClass: string;
+    uploaded: string;
+    checksums: any;
+    httpEtag: string;
+    etag: string;
+    size: number;
+    version: string;
+    key: string;
+  };
+  
+  export type R2FileBody = R2FileData & {
+    body: ReadableStream;
+    bodyUsed: boolean;
+    arrayBuffer: Promise<ArrayBuffer>;
+    text: Promise<string>;
+    json: Promise<any>;
+    blob: Promise<Blob>;
+  };

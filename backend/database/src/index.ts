@@ -40,11 +40,15 @@ export default {
 			if (method === 'GET') {
 				const params = url.searchParams
 				if (params.has('id')) {
-					// Fetch a specific user by ID
+					// Fetch a specific user by ID, alongside their playground
 					const id = params.get('id') as string;
 					const res = await db.query.user.findFirst({
 						where: (user, { eq }) => eq(user.id, id),
-						// TODO: In addition of the user information, Grab the "playgrounds" associated with the user.
+						with:{
+							playground: {
+								orderBy: (playground, { desc }) => [desc(playground.createdAt)],
+							}
+						}
 					});
 					return json(res ?? {});
 				} else {
@@ -94,7 +98,7 @@ export default {
 			if (method === "PUT"){
 				const initSchema = z.object({
 					name: z.string(),
-					type: z.enum([
+					language: z.enum([
 						'typescript',
 						'javascript',
 						'python',
@@ -141,6 +145,7 @@ export default {
 						'plaintext',
 					]),
 					userId: z.string(),
+					description: z.string(),
 					visibility: z.enum(["public", "private"]),
 				})
 
@@ -148,7 +153,7 @@ export default {
 				// It ensures the body of the request adheres 
 				// to the previously defined schema.
 				const body = await request.json()
-				const { name, type, userId, visibility} = initSchema.parse(body)
+				const { name, language, userId, visibility, description} = initSchema.parse(body)
 
 				// Let's find out how many playgrounds 
 				// the user creating this new playground already has
@@ -167,9 +172,15 @@ export default {
 				// Create a record in the playground table
 				const pg = await db
 						.insert(playground)
-						.values({name, type, userId, visibility, createdAt: new Date() })
+						.values({name, language, userId, visibility, createdAt: new Date() })
 						.returning()
 						.get()
+
+				// TODO: I think this is where the LLM API call should happen.
+				// Tell OpenAI to generate a coding challenge based on the "description"
+				// Note: Use "fetch", not axios to keep the code in this worker consistent.
+				// Inspire yourself from API requests made in this very same file.
+				const generatedCodingChallenge = "Dummy generated challenge"
 
 				// Tell the Storage worker to create a new space of this playground.
 				// NOTE: This endpoint in the storage worker is yet to be implemented
@@ -177,7 +188,7 @@ export default {
 					`${env.STORAGE_WORKER_URL}/api/init`,
 					{
 						method: "POST",
-						body: JSON.stringify({playgroundId: pg.id, type}),
+						body: JSON.stringify({playgroundId: pg.id, language: language, description: generatedCodingChallenge}),
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `${env.AUTH_KEY}`,
@@ -198,7 +209,7 @@ export default {
 				if (params.has("id")){
 					const id = params.get("id") as string
 					const res = await db.query.playground.findFirst({
-						where: (sandbox, { eq }) => eq(sandbox.id, id),
+						where: (playground, { eq }) => eq(playground.id, id),
 					})
 					return json(res ?? {})
 				}
