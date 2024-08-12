@@ -11,6 +11,8 @@ export interface Env {
 	DB: D1Database;
 	STORAGE: any;
 	AUTH_KEY: string;
+	OPENAI_KEY: string;
+	AZURE_PROXY_ENDPOINT: string;
 	STORAGE_WORKER_URL: string;
 }
 
@@ -146,61 +148,80 @@ export default {
 					]),
 					userId: z.string(),
 					description: z.string(),
-					visibility: z.enum(["public", "private"]),
-				})
+					visibility: z.enum(['public', 'private']),
+				});
 
 				// Validate the frontend request using Zod.
-				// It ensures the body of the request adheres 
+				// It ensures the body of the request adheres
 				// to the previously defined schema.
-				const body = await request.json()
-				const { name, language, userId, visibility, description} = initSchema.parse(body)
+				const body = await request.json();
+				const { name, language, userId, visibility, description } = initSchema.parse(body);
 
-				// Let's find out how many playgrounds 
+				// Let's find out how many playgrounds
 				// the user creating this new playground already has
-				const userPlaygrounds = await db
-						.select()
-						.from(playground)
-						.where(eq(playground.userId, userId))
-						.all()
-				
+				const userPlaygrounds = await db.select().from(playground).where(eq(playground.userId, userId)).all();
+
 				if (userPlaygrounds.length >= 10) {
-					return new Response("You reached the maximum # of playgrounds.", {
+					return new Response('You reached the maximum # of playgrounds.', {
 						status: 400,
-					})
+					});
 				}
 
 				// Create a record in the playground table
-				const pg = await db
-						.insert(playground)
-						.values({name, language, userId, visibility, createdAt: new Date() })
-						.returning()
-						.get()
+				const pg = await db.insert(playground).values({ name, language, userId, visibility, createdAt: new Date() }).returning().get();
 
 				// TODO: I think this is where the LLM API call should happen.
 				// Tell OpenAI to generate a coding challenge based on the "description"
 				// Note: Use "fetch", not axios to keep the code in this worker consistent.
 				// Inspire yourself from API requests made in this very same file.
-				const generatedCodingChallenge = "Dummy generated challenge"
+				const apiVersion = '2024-02-01';
+				const modelName = 'gpt-35-turbo';
+
+				// OpenAI API call
+				const openaiRequest = new Request(
+					`${env.AZURE_PROXY_ENDPOINT}/openai/deployments/gpt-35-turbo/chat/completions?api-version=2024-02-01`,
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'api-key': env.OPENAI_KEY,
+						},
+						body: JSON.stringify({
+							model: 'gpt-35-turbo',
+							messages: [
+								{ role: 'system', content: 'You are a helpful, compassionate, expert programming researcher who is now teaching younger students. You follow directions, and always write your answers in markdown' },
+								{ role: 'user', content: `A learner provided the following description of what they would like to learn: "${description}" can you generate a coding challenges to help them achieve the expressed learning goals? Provide starter code snippets for inspiration. Directly write the challenge as your answer` }, // TODO: Write challenge in markdown
+							],
+						}),
+					}
+				);
+				const openaiResponse = await fetch(openaiRequest);
+
+				let generatedCodingChallenge = 'Dummy programming challenge';
+
+				if (openaiResponse.ok) {
+					const openaiData = await openaiResponse.json();
+					generatedCodingChallenge = openaiData.choices[0].message.content;
+				} else {
+					console.error(`OpenAI API request failed: ${openaiResponse.statusText}`);
+					// You might want to handle this error case appropriately
+				}
 
 				// Tell the Storage worker to create a new space of this playground.
 				// NOTE: This endpoint in the storage worker is yet to be implemented
-				const initStorageRequest = new Request(
-					`${env.STORAGE_WORKER_URL}/api/init`,
-					{
-						method: "POST",
-						body: JSON.stringify({playgroundId: pg.id, language: language, description: generatedCodingChallenge}),
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `${env.AUTH_KEY}`,
-						}
-					}
-				)
+				const initStorageRequest = new Request(`${env.STORAGE_WORKER_URL}/api/init`, {
+					method: 'POST',
+					body: JSON.stringify({ playgroundId: pg.id, language: language, description: generatedCodingChallenge }),
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `${env.AUTH_KEY}`,
+					},
+				});
 
-				await env.STORAGE.fetch(initStorageRequest)
+				await env.STORAGE.fetch(initStorageRequest);
 
 				// Return success response
-				return new Response(pg.id, { status: 200})
-
+				return new Response(pg.id, { status: 200 });
 			}
 			else if (method === "GET"){
 				const params = url.searchParams
