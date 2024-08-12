@@ -20,6 +20,14 @@ import { CODE_SNIPPETS } from "@/constants";
 import { Socket, io } from "socket.io-client";
 import { useClerk } from "@clerk/nextjs";
 import { debounce } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { GeistMono } from "geist/font/mono";
 
 export default function PlaygroundEditor({
   userData,
@@ -114,7 +122,7 @@ export default function PlaygroundEditor({
         timeout: 2000,
       }
     );
-  
+
     return () => {
       socketRef.current?.disconnect();
     };
@@ -204,7 +212,8 @@ export default function PlaygroundEditor({
       );
       console.log(`Saving file...${activeFileId}`);
       console.log(`Saving file...${value}`);
-      socketRef.current?.emit("saveFile", activeFileId, value, (response) => { // !NOTE: "response" has implicit "any" type. Address it.
+      socketRef.current?.emit("saveFile", activeFileId, value, (response) => {
+        // !NOTE: "response" has implicit "any" type. Address it.
         if (response.success) {
           // Show a save success message
           console.log("File saved successfully");
@@ -233,93 +242,124 @@ export default function PlaygroundEditor({
   }, [activeFileId, debouncedSaveData, editorRef, tabs]);
 
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="h-screen bg-gray-200"
-    >
-      <ResizablePanel defaultSize={50} className="bg-white m-1 rounded-md">
-        <div className="bg-gray-50 p-1 flex justify-between items-center">
-          <div className="flex divide-x divide-gray-300/50">
-            <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
-              <Swords className="mr-1 h-5 w-5" color="#3a88fe" /> Challenge
-            </Button>
+    <div className="h-screen overflow-auto bg-gray-200">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="h-screen bg-gray-200"
+      >
+        <ResizablePanel defaultSize={50} className="bg-white m-1 rounded-md">
+          <div className="bg-gray-50 p-1 flex justify-between items-center">
+            <div className="flex divide-x divide-gray-300/50">
+              <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
+                <Swords className="mr-1 h-5 w-5" color="#3a88fe" /> Challenge
+              </Button>
 
-            <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
-              <Plus className="h-5 w-5" color="#aaaaaa" />
-            </Button>
+              <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
+                <Plus className="h-5 w-5" color="#aaaaaa" />
+              </Button>
+            </div>
           </div>
-        </div>
-        {/* Problem description panel */}
-        <div className="h-full p-4 overflow-auto">{problemStatement}</div>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={50}>
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel
-            defaultSize={75}
-            minSize={30}
-            className="bg-white m-1 rounded-md"
+          {/* Problem description panel */}
+
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}
+            className="h-full p-4 overflow-auto prose prose-sm max-w-none"
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={vscDarkPlus}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
           >
-            {/* Code editor panel */}
-            <div className="h-full">
-              <div className="bg-gray-50 p-1 flex justify-between items-center">
-                <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
-                  <CodeXml className="mr-1 h-5 w-5" color="#02b028" /> Code
-                </Button>
+            {problemStatement}
+          </ReactMarkdown>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={50}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel
+              defaultSize={75}
+              minSize={30}
+              className="bg-white m-1 rounded-md"
+            >
+              {/* Code editor panel */}
+              <div className="h-full">
+                <div className="bg-gray-50 p-1 flex justify-between items-center">
+                  <Button className="bg-transparent px-2 py-1 hover:bg-gray-200 ">
+                    <CodeXml className="mr-1 h-5 w-5" color="#02b028" /> Code
+                  </Button>
+                </div>
+                <Editor
+                  height="calc(100% - 40px)"
+                  language={editorLanguage}
+                  value={activeFileContent}
+                  /*Can add default code snippets here */
+                  // defaultValue= {CODE_SNIPPETS[language]}
+                  beforeMount={handleEditorWillMount}
+                  onMount={handleEditorMount}
+                  options={{
+                    tabSize: 4,
+                    minimap: {
+                      enabled: false,
+                    },
+                    padding: {
+                      bottom: 4,
+                      top: 4,
+                    },
+                    fontSize: 14,
+                    scrollBeyondLastLine: false,
+                    fixedOverflowWidgets: true,
+                    fontFamily: "var(--font-geist-mono)",
+                  }}
+                />
               </div>
-              <Editor
-                height="calc(100% - 40px)"
-                language={editorLanguage}
-                value={activeFileContent}
-                /*Can add default code snippets here */
-                // defaultValue= {CODE_SNIPPETS[language]}
-                beforeMount={handleEditorWillMount}
-                onMount={handleEditorMount}
-                options={{
-                  tabSize: 4,
-                  minimap: {
-                    enabled: false,
-                  },
-                  padding: {
-                    bottom: 4,
-                    top: 4,
-                  },
-                  fontSize: 14,
-                  scrollBeyondLastLine: false,
-                  fixedOverflowWidgets: true,
-                  fontFamily: "var(--font-geist-mono)",
-                }}
-              />
-            </div>
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={25} className="bg-white m-1 rounded-md">
-            {/* Terminal panel */}
-            <div className="h-full">
-              <div className="bg-gray-50 p-1 flex justify-between items-center">
-                <Button
-                  onClick={runCode}
-                  className="bg-transparent px-2 py-1 hover:bg-gray-200"
-                >
-                  <Terminal className="mr-1 h-5 w-5" color="#02b028" /> Run Code
-                </Button>
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel
+              defaultSize={25}
+              className="bg-white m-1 rounded-md"
+            >
+              {/* Terminal panel */}
+              <div className="h-full">
+                <div className="bg-gray-50 p-1 flex justify-between items-center">
+                  <Button
+                    onClick={runCode}
+                    className="bg-transparent px-2 py-1 hover:bg-gray-200"
+                  >
+                    <Terminal className="mr-1 h-5 w-5" color="#02b028" /> Run
+                    Code
+                  </Button>
+                </div>
+                <div className="h-full p-4 overflow-auto">
+                  {output
+                    ? output.map((line, i) => (
+                        <div
+                          key={i}
+                          className={`${isError ? "text-red-500" : ""}`}
+                        >
+                          {line}
+                        </div>
+                      ))
+                    : "Click 'Run Code' to see the output here!"}
+                </div>
               </div>
-              <div className="h-full p-4 overflow-auto">
-                {output
-                  ? output.map((line, i) => (
-                      <div
-                        key={i}
-                        className={`${isError ? "text-red-500" : ""}`}
-                      >
-                        {line}
-                      </div>
-                    ))
-                  : "Click 'Run Code' to see the output here!"}
-              </div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 }
