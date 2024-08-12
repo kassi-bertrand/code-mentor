@@ -140,6 +140,63 @@ After deploying the Worker locally, the command will give you a URL (most likely
 Choose a super duper secret password, and assign it to the `NEXT_PUBLIC_WORKERS_KEY` variable in the `frontend/.env` file. Assign the very same password to the `AUTH_KEY` variable located inside your `backend/database/wrangler.toml`.
 
 
+### Setup the `Storage` Worker
+
+The `Storage` Worker is a serverless function that exposes an interface for interacting with large amounts of unstructured data. Behind the scenes, this Worker rests on Cloudflare's `R2` service, which is an AWS S3-compatible bucket.
+
+The setup process of this worker is similar to the `Database` Worker. The process described here follows the tutorial on How to [Use R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/).
+
+#### Install the dependencies
+
+Assuming you're at the root of the project, install the Worker's dependencies with:
+
+```sh
+cd backend/storage
+npm install
+```
+
+#### Create an `R2` bucket
+
+Before proceeding, create a local R2 bucket if you haven't already. Assuming you're in the `backend/storage` folder issue the following command:
+
+```sh
+npx wrangler r2 bucket create <YOUR_BUCKET_NAME>
+```
+
+For this tutorial use, use the name `code-mentor-bucket`.
+
+To ensure your bucket was created, do:
+
+```sh
+npx wrangler r2 bucket list
+```
+
+#### Create/Update your `wrangler.toml`
+
+Assuming you're in the `backend/storage` folder, create a new file called `wrangler.toml`. There is already an example inside the `wrangler.example.toml` file, copy its content over to your new `wrangler.toml` file.
+
+In your `wrangler.toml`, provide the values for the following variables
+
+```toml
+[[r2_buckets]]
+binding = 'R2'
+bucket_name = 'code-mentor-bucket'
+
+# AUTH_KEY is the same value as in the Database Worker.
+[vars]
+AUTH_KEY = ''
+```
+
+#### Deploy the `Storage` Worker locally
+
+To deploy your Worker locally, run:
+
+```sh
+npx wrangler dev
+```
+
+Now, just like the `Database` Worker, this Worker will also be deployed.
+
 ## Run the CodeMentor application on your computer
 
 Launch the development server:
