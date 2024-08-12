@@ -242,7 +242,7 @@ export default function PlaygroundEditor({
   }, [activeFileId, debouncedSaveData, editorRef, tabs]);
 
   return (
-    <div className="h-screen overflow-auto bg-gray-200">
+    <div className="h-screen w-screen overflow-auto bg-gray-200">
       <ResizablePanelGroup
         direction="horizontal"
         className="h-screen bg-gray-200"
