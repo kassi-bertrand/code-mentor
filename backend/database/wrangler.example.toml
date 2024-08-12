@@ -20,6 +20,8 @@ services = [{ binding = "STORAGE", service = "storage" }]
 # Set AUTH_KEY to be the same as AUTH_KEY in /backend/storage/wrangler.toml.
 [vars]
 AUTH_KEY = ""
+OPENAI_KEY = ""
+AZURE_PROXY_ENDPOINT = ""
 STORAGE_WORKER_URL = ""
 CLOUDFLARE_ACCOUNT_ID = ""
 CLOUDFLARE_DATABASE_ID = ""
