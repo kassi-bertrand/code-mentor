@@ -15,19 +15,16 @@ import { Playground, TFile, TFolder, TTab, User } from "@/lib/types";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { CodeXml, Plus, Swords, Terminal } from "lucide-react";
 import Button from "../ui/customButton";
-import { executeCode } from "@/piston_api";
-import { CODE_SNIPPETS } from "@/constants";
 import { Socket, io } from "socket.io-client";
 import { useClerk } from "@clerk/nextjs";
 import { debounce } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { GeistMono } from "geist/font/mono";
+import { executeCode } from "@/lib/actions";
 
 export default function PlaygroundEditor({
   userData,
@@ -83,6 +80,13 @@ export default function PlaygroundEditor({
     editor.onDidBlurEditorText((e) => {});
   };
 
+  const getCurrentEditorContent = () => {
+    if (editorRef) {
+      return editorRef.getValue();
+    }
+    return ""; // or return activeFileContent as a fallback
+  };
+
   // Set output state to update as the Run Code button is pressed
   const [output, setOutput] = useState<string[] | null>(null);
 
@@ -96,7 +100,7 @@ export default function PlaygroundEditor({
 
   // Handle Run Code button to see the output
   const runCode = async () => {
-    const sourceCode = editorRef?.getValue();
+    const sourceCode = getCurrentEditorContent();
     // if there is no source code, return no output
     if (!sourceCode) return;
     // request to Piston API to fetch the output
