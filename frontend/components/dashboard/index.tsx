@@ -32,10 +32,11 @@ import { AccountDropdown } from "@/components/dashboard/account-dropdown";
 import { Nav } from "@/components/dashboard/nav";
 import { useMail } from "@/components/dashboard/use-mail";
 import { NewPlaygroundModal } from "@/components/dashboard/new-playground-modal";
-import { Playground } from "@/lib/types";
+import { Playground, User } from "@/lib/types";
 import { PlaygroundList } from "@/components/dashboard/playground-list";
 
 interface DashboardProps {
+  userData: User
   playgrounds: Playground[];
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -43,13 +44,13 @@ interface DashboardProps {
 }
 
 export default function Dashboard({
+  userData,
   playgrounds,
   defaultLayout = [20, 32, 48],
   defaultCollapsed = false,
   navCollapsedSize,
 }: DashboardProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [mail] = useMail();
   const [isNewPlaygroundModalOpen, setIsNewPlaygroundModalOpen] =
     React.useState(false);
 
@@ -168,7 +169,7 @@ export default function Dashboard({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <PlaygroundList items={playgrounds} />
+              <PlaygroundList items={playgrounds} userData={userData} />
             </TabsContent>
           </Tabs>
         </ResizablePanel>
