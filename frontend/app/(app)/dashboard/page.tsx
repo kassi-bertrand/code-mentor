@@ -37,6 +37,7 @@ export default async function DashboardPage() {
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden overscroll-none">
       <Dashboard 
+        userData={userData}
         playgrounds={userData.playground}
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}
