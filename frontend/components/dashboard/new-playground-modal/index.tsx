@@ -64,7 +64,22 @@ const languages = [
   "rust",
   "kotlin",
   "swift",
-  // ... add all other languages from your list
+  "scala",
+  "sqlite3",
+  "perl",
+  "rscript",
+  "dart",
+  "lua",
+  "groovy",
+  "haskell",
+  "erlang",
+  "elixir",
+  "clojure",
+  "coffeescript",
+  "ocaml",
+  "powershell",
+  "matl",
+  "bash"
 ] as const;
 
 type Language = (typeof languages)[number];

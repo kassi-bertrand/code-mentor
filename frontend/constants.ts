@@ -1,10 +1,32 @@
 export const LANGUAGE_VERSIONS = {
-    javascript: "18.15.0",
-    typescript: "5.0.3",
-    python: "3.10.0",
-    java: "15.0.2",
-    csharp: "6.12.0",
-    php: "8.2.3"
+  typescript: '5.0.3',
+  javascript: '18.15.0',
+    python : '3.10.0',
+    java: '15.0.2',
+  ruby: '3.0.1',
+    php: '8.2.3',
+    csharp: '6.12.0',
+    cpp: '10.2.0',
+    go: '1.16.2',
+    rust: '1.68.2',
+    kotlin: '1.8.20',
+    swift: '5.3.3',
+    scala: '3.2.2',
+    sqlite3:'3.36.0',
+    perl:'5.36.0',
+  rscript: '4.1.1',
+    dart: '2.19.6',
+    lua: '5.4.4',
+    groovy: '3.0.7',
+    haskell: '9.0.1',
+    erlang: '23.0.0',
+    elixir: '1.11.3',
+    clojure: '1.10.3',
+    coffeescript: '2.5.1',
+    ocaml: '4.12.0',
+    powershell: '7.1.4',
+    matl:'22.7.4',
+  bash: '5.2.0'
 };
 
 export const USER_LEVEL = [
