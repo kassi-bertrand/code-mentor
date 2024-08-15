@@ -30,12 +30,14 @@ import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AccountDropdown } from "@/components/dashboard/account-dropdown";
 import { Nav } from "@/components/dashboard/nav";
-import { useMail } from "@/components/dashboard/use-mail";
 import { NewPlaygroundModal } from "@/components/dashboard/new-playground-modal";
-import { Playground } from "@/lib/types";
+import { Playground, User } from "@/lib/types";
 import { PlaygroundList } from "@/components/dashboard/playground-list";
+import { PlaygroundDisplay } from "@/components/dashboard/playground-display";
+import { useSelectedPlayground } from "@/components/dashboard/use-playground";
 
 interface DashboardProps {
+  userData: User
   playgrounds: Playground[];
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -43,17 +45,19 @@ interface DashboardProps {
 }
 
 export default function Dashboard({
+  userData,
   playgrounds,
   defaultLayout = [20, 32, 48],
   defaultCollapsed = false,
   navCollapsedSize,
 }: DashboardProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [mail] = useMail();
+  const [selectedPlayground] = useSelectedPlayground()
   const [isNewPlaygroundModalOpen, setIsNewPlaygroundModalOpen] =
     React.useState(false);
 
   return (
+    <div className="h-full w-full overscroll-hidden">
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
@@ -62,7 +66,7 @@ export default function Dashboard({
             sizes
           )}`;
         }}
-        className="h-full w-full"
+        className="h-full overflow-hidden"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
@@ -168,24 +172,24 @@ export default function Dashboard({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <PlaygroundList items={playgrounds} />
+              <PlaygroundList items={playgrounds} userData={userData} />
             </TabsContent>
           </Tabs>
         </ResizablePanel>
 
-        {/** Here i would like to preview the challenge of the playground, but it's stored in R2. */}
-        {/** I am not quit sure how to properly address it, yet. I would like to revisit it later. */}
-        {/* <ResizableHandle withHandle /> */}
-        {/* <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-            <MailDisplay
-              mail={mails.find((item) => item.id === mail.selected) || null}
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={defaultLayout[2]} minSize={30} className="overflow-hidden">
+            <PlaygroundDisplay
+              playground={playgrounds.find((item) => item.id === selectedPlayground.selected) || null}
+              userId={userData.id}
             />
-          </ResizablePanel> */}
+          </ResizablePanel>
       </ResizablePanelGroup>
       <NewPlaygroundModal
         isOpen={isNewPlaygroundModalOpen}
         onClose={() => setIsNewPlaygroundModalOpen(false)}
       />
     </TooltipProvider>
+    </div>
   );
 }
