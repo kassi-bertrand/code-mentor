@@ -267,8 +267,17 @@ export default function PlaygroundEditor({
 
           <ReactMarkdown
             rehypePlugins={[rehypeRaw, rehypeSanitize]}
-            className="h-full p-4 overflow-auto prose prose-sm max-w-none"
+            className="h-full p-4 overflow-auto prose max-w-none"
             components={{
+              h1: ({ node, ...props }) => (
+                <h1 className="text-4xl font-bold mt-8 mb-4" {...props} />
+              ),
+              h2: ({ node, ...props }) => (
+                <h2 className="underline text-3xl font-semibold mt-6 mb-3" {...props} />
+              ),
+              h3: ({ node, ...props }) => (
+                <h3 className="text-2xl font-medium mt-4 mb-2" {...props} />
+              ),
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
@@ -281,7 +290,7 @@ export default function PlaygroundEditor({
                     {String(children).replace(/\n$/, "")}
                   </SyntaxHighlighter>
                 ) : (
-                  <code className={className} {...props}>
+                  <code className="bg-gray-200 text-black dark:bg-gray-800 dark:text-white px-2 rounded font-mono" {...props}>
                     {children}
                   </code>
                 );
