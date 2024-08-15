@@ -168,10 +168,7 @@ export default {
 					});
 				}
 
-				// Create a record in the playground table
-				const pg = await db.insert(playground).values({ name, language, userId, visibility, createdAt: new Date() }).returning().get();
 
-				// TODO: I think this is where the LLM API call should happen.
 				// Tell OpenAI to generate a coding challenge based on the "description"
 				// Note: Use "fetch", not axios to keep the code in this worker consistent.
 				// Inspire yourself from API requests made in this very same file.
@@ -214,6 +211,12 @@ export default {
 					console.error(`OpenAI API request failed: ${openaiResponse.statusText}`);
 					// You might want to handle this error case appropriately
 				}
+
+				// Create a record in the playground table
+				// NOTE: "values" is underlined because "Playground" table's schema
+				// allows for more language options than "initSchema". It shouldn't be 
+				// a problem, I think.
+				const pg = await db.insert(playground).values({ name, language, userId, visibility, createdAt: new Date() }).returning().get();
 
 				// Tell the Storage worker to create a new space of this playground.
 				// NOTE: This endpoint in the storage worker is yet to be implemented
