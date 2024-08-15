@@ -37,7 +37,7 @@ export function PlaygroundList({ items, userData }: PlaygroundListProps) {
             }}
           >
             <Suspense fallback={<PlaygroundItemSkeleton/>}>
-              <PlaygrounItem playground={item} userId={userData.id}/>
+              <PlaygroundItem playground={item} userId={userData.id}/>
             </Suspense>
           </button>
         ))}
@@ -46,7 +46,7 @@ export function PlaygroundList({ items, userData }: PlaygroundListProps) {
   );
 }
 
-function PlaygrounItem({
+function PlaygroundItem({
   playground,
   userId,
 }: {
