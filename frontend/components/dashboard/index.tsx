@@ -46,7 +46,7 @@ interface DashboardProps {
 
 export default function Dashboard({
   userData,
-  playgrounds,
+  playgrounds = [],
   defaultLayout = [20, 32, 48],
   defaultCollapsed = false,
   navCollapsedSize,

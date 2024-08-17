@@ -23,14 +23,15 @@ export default async function DashboardPage() {
   );
 
   const userData = (await userRes.json()) as User;
+  const userPlaygrounds = Array.isArray(userData.playground) ? userData.playground : [];
 
-    // Parse cookies
-    const cookieStore = cookies();
-    const layout = cookieStore.get("react-resizable-panels:layout:mail");
-    const collapsed = cookieStore.get("react-resizable-panels:collapsed");
-  
-    const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
-    const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
+  // Parse cookies
+  const cookieStore = cookies();
+  const layout = cookieStore.get("react-resizable-panels:layout:mail");
+  const collapsed = cookieStore.get("react-resizable-panels:collapsed");
+
+  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
+  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 
   // TODO: Query information about playgrounds this user has shared.
 
@@ -38,7 +39,7 @@ export default async function DashboardPage() {
     <div className="w-screen h-screen flex flex-col overscroll-none">
       <Dashboard 
         userData={userData}
-        playgrounds={userData.playground}
+        playgrounds={userPlaygrounds}
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}
         navCollapsedSize={4}
