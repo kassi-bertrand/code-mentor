@@ -52,7 +52,14 @@ export default {
 							}
 						}
 					});
-					return json(res ?? {});
+					// Prepare the response:
+					// If a user was found (res exists):
+					//   - Return all user data (...res)
+					//   - Ensure playground is always an array (res.playground || [])
+					// If no user was found:
+					//   - Return an object with an empty playground array
+					// This ensures we always return a consistent structure, even for new users with no playgrounds.
+					return json(res ? { ...res, playground: res.playground || [] } : { playground: [] });
 				} else {
 					// Fetch all users
 					const res = await db.select().from(user).all();
